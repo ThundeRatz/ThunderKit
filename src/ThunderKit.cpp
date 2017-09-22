@@ -121,6 +121,7 @@ void ThunderKit::addSensor(int pin, int threshold){
 	sensor_linha = novo_sensor;
 	novo_sensor.pino = pin;	novo_sensor.limiar = threshold;
 	sensors.push_back(novo_sensor);
+	pinMode(pin, INPUT);
 	qtde_sensors++;
 }
 
@@ -134,6 +135,7 @@ void ThunderKit::addSensor(int pin){
 	sensor_linha = novo_sensor;
 	novo_sensor.pino = pin;	novo_sensor.limiar = 512;
 	sensors.push_back(novo_sensor);
+	pinMode(pin, INPUT);
 	qtde_sensors++;
 }
 

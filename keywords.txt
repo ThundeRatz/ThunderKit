@@ -12,3 +12,7 @@ ThunderKit	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #############################################
 
+addSensor	KEYWORLD2
+setThreshold	KEYWORLD2
+getColor	KEYWORLD2
+getReading	KEYWORLD2

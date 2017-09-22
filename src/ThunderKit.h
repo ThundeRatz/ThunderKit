@@ -15,6 +15,15 @@
 #define BIN2   D10
 #define nSLEEP D7
 
+#define FAST_ACCEL 0x00
+#define SLOW_ACCEL 0x01
+
+#define ESQ 0x00
+#define DIR 0x01
+
+#define HOR 0x01
+#define AHOR 0x00
+
 // LEDs
 #define LED    D13
 #define LEDR   SCL
@@ -31,11 +40,17 @@ class ThunderKit {
 		 * Sensores de linha
 		 */
 		 
-		void addSensor(int pin);
 		void addSensor(int pin, int threshold);
 		void setThreshold(int num_sensor, int threshold);
 		uint8_t getColor(int num_sensor);
 		uint16_t getReading(int num_sensor);
+		
+		/*
+		 * Motores
+		 */
+		 
+		void setSpeed(int side, int dir, int speed);
+		void stopAll();
 		
 	private:
 	
@@ -55,7 +70,6 @@ class ThunderKit {
 			uint8_t limiar;
 		}
 		sensor_linha sensors[6];
-		
 };
 
 #endif

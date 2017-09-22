@@ -64,6 +64,7 @@ int ThunderKit::begin() {
 	Serial.println();
 
 	// Confugracao motores e outras coisas
+	qtde_sensors = 0;
 	Serial.println("configuração concluida!");
 
 	return 0;
@@ -108,3 +109,68 @@ int ThunderKit::send_msg(char* msg) {
 
 	return 0;
 }
+
+void ThunderKit::addSensor(int pin, int threshold){
+	
+	/*
+		Recebe: Numero do pino do sensor e limiar de cor. Valor default para limiar = 512
+		Reserva um espaco na memoria para o sensor, designando a ele o id correspondente ao valor de qtde_sensors
+		As identificacoes dos sensores sera de acordo com a ordem que eles serao declarados
+	*/
+	
+	sensor_linha = novo_sensor;
+	novo_sensor.pino = pin;	novo_sensor.limiar = threshold;
+	sensors.push_back(novo_sensor);
+	qtde_sensors++;
+}
+
+void ThunderKit::addSensor(int pin){
+	
+	/*
+		Recebe: Numero do pino do sensor
+		Reserva um espaco na memoria para o sensor, designando a ele o id correspondente ao valor de qtde_sensors
+	*/
+	
+	sensor_linha = novo_sensor;
+	novo_sensor.pino = pin;	novo_sensor.limiar = 512;
+	sensors.push_back(novo_sensor);
+	qtde_sensors++;
+}
+
+void ThunderKit::setThreshold(int num_sensor, int threshold){
+	
+	/*
+		Recebe: Numero do sensor, limiar a ser designado
+	*/
+	
+	sensors[num_sensor].limiar = threshold;	
+}
+
+int ThunderKit::getColor(int num_sensor){
+	
+	/*
+		Recebe: Numero do sensor
+		Retorna: 0 - caso abaixo do limiar (preto) | 1 - caso acima do limiar (branco) | -1 - caso num_sensor invalido
+	*/
+	
+	if(num_sensor >= qtde_sensors){
+		return -1;
+	}
+	int reading = analogRead(sensors[num_sensor].pino);
+	return reading >= sensors[num_sensor].limiar;
+}
+
+int ThunderKit::getReading(int num_sensor){
+	
+	/*
+		Recebe: Numero do sensor
+		Retorna: Leitura analogica do pino
+	*/
+	
+	if(num_sensor >= qtde_sensors){
+		return -1;
+	}
+	int reading = analogRead(sensors[num_sensor].pino);
+	return reading;
+}
+

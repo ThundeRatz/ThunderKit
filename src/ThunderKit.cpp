@@ -64,7 +64,9 @@ int ThunderKit::begin() {
 	Serial.println();
 
 	// Confugracao motores e outras coisas
-	qtde_sensors = 0;
+	for(int i = 0; i < 6; i++){		
+		sensors[i].pin = -1; sensors[i].limiar = -1;
+	}
 	Serial.println("configuração concluida!");
 
 	return 0;
@@ -118,11 +120,8 @@ void ThunderKit::addSensor(int pin, int threshold){
 		As identificacoes dos sensores sera de acordo com a ordem que eles serao declarados
 	*/
 	
-	sensor_linha = novo_sensor;
-	novo_sensor.pino = pin;	novo_sensor.limiar = threshold;
-	sensors.push_back(novo_sensor);
+	sensors[pin-A0].pin = pin;  sensors[pin-A0].limiar = threshold;
 	pinMode(pin, INPUT);
-	qtde_sensors++;
 }
 
 void ThunderKit::addSensor(int pin){
@@ -132,37 +131,31 @@ void ThunderKit::addSensor(int pin){
 		Reserva um espaco na memoria para o sensor, designando a ele o id correspondente ao valor de qtde_sensors
 	*/
 	
-	sensor_linha = novo_sensor;
-	novo_sensor.pino = pin;	novo_sensor.limiar = 512;
-	sensors.push_back(novo_sensor);
+	sensors[pin-A0].pin = pin;  sensors[pin-A0].limiar = threshold;
 	pinMode(pin, INPUT);
-	qtde_sensors++;
 }
 
-void ThunderKit::setThreshold(int num_sensor, int threshold){
+void ThunderKit::setThreshold(int pin, int threshold){
 	
 	/*
 		Recebe: Numero do sensor, limiar a ser designado
 	*/
 	
-	sensors[num_sensor].limiar = threshold;	
+	sensors[pin-A0].limiar = threshold;	
 }
 
-int ThunderKit::getColor(int num_sensor){
+uint8_t ThunderKit::getColor(int num_sensor){
 	
 	/*
 		Recebe: Numero do sensor
 		Retorna: 0 - caso abaixo do limiar (preto) | 1 - caso acima do limiar (branco) | -1 - caso num_sensor invalido
 	*/
 	
-	if(num_sensor >= qtde_sensors){
-		return -1;
-	}
-	int reading = analogRead(sensors[num_sensor].pino);
-	return reading >= sensors[num_sensor].limiar;
+	uint16_t reading = analogRead(sensors[num_sensor-A0].pino);
+	return reading >= sensors[num_sensor-A0].limiar;
 }
 
-int ThunderKit::getReading(int num_sensor){
+uint16_t ThunderKit::getReading(int num_sensor){
 	
 	/*
 		Recebe: Numero do sensor
@@ -172,7 +165,7 @@ int ThunderKit::getReading(int num_sensor){
 	if(num_sensor >= qtde_sensors){
 		return -1;
 	}
-	int reading = analogRead(sensors[num_sensor].pino);
+	uint16_t reading = analogRead(sensors[num_sensor-A0].pino);
 	return reading;
 }
 

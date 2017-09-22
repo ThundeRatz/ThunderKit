@@ -30,11 +30,12 @@ class ThunderKit {
 		/*
 		 * Sensores de linha
 		 */
-		 void addSensor(int pin);
-		 void addSensor(int pin, int threshold);
-		 void setThreshold(int num_sensor, int threshold);
-		 int getColor(int num_sensor);
-		 int getReading(int num_sensor);
+		 
+		void addSensor(int pin);
+		void addSensor(int pin, int threshold);
+		void setThreshold(int num_sensor, int threshold);
+		uint8_t getColor(int num_sensor);
+		uint16_t getReading(int num_sensor);
 		
 	private:
 	
@@ -50,11 +51,10 @@ class ThunderKit {
 		 *	Sensores de linha
 		 */
 		struct sensor_linha{
-			int pino;
-			int limiar;
+			uint8_t pino;
+			uint8_t limiar;
 		}
-		vector<sensor_linha> sensors;
-		int qtde_sensors;
+		sensor_linha sensors[6];
 		
 };
 

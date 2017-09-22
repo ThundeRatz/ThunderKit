@@ -68,7 +68,7 @@ class ThunderKit {
 		struct sensor_linha{
 			uint8_t pino;
 			uint8_t limiar;
-		}
+		};
 		sensor_linha sensors[6];
 };
 

@@ -64,7 +64,7 @@ int ThunderKit::begin() {
 	Serial.println();
 
 	// Confugracao motores e outras coisas
-	for(int i = 0; i < 6; i++){		
+	for(int i = 0; i < 5; i++){		
 		sensors[i].pin = -1; sensors[i].limiar = -1;
 	}
 	Serial.println("configuração concluida!");
@@ -112,36 +112,26 @@ int ThunderKit::send_msg(char* msg) {
 	return 0;
 }
 
-void ThunderKit::addSensor(int pin, int threshold){
+#define FIRST_SENSOR A1
+
+void ThunderKit::addSensor(int pin, int threshold=512){
 	
 	/*
 		Recebe: Numero do pino do sensor e limiar de cor. Valor default para limiar = 512
-		Reserva um espaco na memoria para o sensor, designando a ele o id correspondente ao valor de qtde_sensors
-		As identificacoes dos sensores sera de acordo com a ordem que eles serao declarados
+		Reserva um espaco na memoria para o sensor
 	*/
 	
-	sensors[pin-A0].pin = pin;  sensors[pin-A0].limiar = threshold;
-	pinMode(pin, INPUT);
-}
-
-void ThunderKit::addSensor(int pin){
-	
-	/*
-		Recebe: Numero do pino do sensor
-		Reserva um espaco na memoria para o sensor, designando a ele o id correspondente ao valor de qtde_sensors
-	*/
-	
-	sensors[pin-A0].pin = pin;  sensors[pin-A0].limiar = threshold;
+	sensors[pin-FIRST_SENSOR].pin = pin;  sensors[pin-FIRST_SENSOR].limiar = threshold;
 	pinMode(pin, INPUT);
 }
 
 void ThunderKit::setThreshold(int pin, int threshold){
 	
 	/*
-		Recebe: Numero do sensor, limiar a ser designado
+		Recebe: Numero do sensor| limiar a ser designado
 	*/
 	
-	sensors[pin-A0].limiar = threshold;	
+	sensors[pin-FIRST_SENSOR].limiar = threshold;	
 }
 
 uint8_t ThunderKit::getColor(int num_sensor){
@@ -151,8 +141,8 @@ uint8_t ThunderKit::getColor(int num_sensor){
 		Retorna: 0 - caso abaixo do limiar (preto) | 1 - caso acima do limiar (branco) | -1 - caso num_sensor invalido
 	*/
 	
-	uint16_t reading = analogRead(sensors[num_sensor-A0].pino);
-	return reading >= sensors[num_sensor-A0].limiar;
+	uint16_t reading = analogRead(sensors[num_sensor-FIRST_SENSOR].pino);
+	return reading >= sensors[num_sensor-FIRST_SENSOR].limiar;
 }
 
 uint16_t ThunderKit::getReading(int num_sensor){
@@ -165,7 +155,71 @@ uint16_t ThunderKit::getReading(int num_sensor){
 	if(num_sensor >= qtde_sensors){
 		return -1;
 	}
-	uint16_t reading = analogRead(sensors[num_sensor-A0].pino);
+	uint16_t reading = analogRead(sensors[num_sensor-FIRST_SENSOR].pino);
 	return reading;
 }
 
+void ThunderKit::setSpeed(int side, int dir, int speed, int accel){
+	
+	/*
+		Recebe: side (ESQ,DIR)| dir (HOR, AHOR)| speed (0->100)| accel (FAST, SLOW)
+		side 	-> Qual motor se refere
+		dir 	-> Qual o sentido de rotacao
+		speed 	-> Velocidade entra 0 e 100%
+		accel 	-> Modo de aceleracao, rapido ou lento
+		
+		De acordo com a pg 9 do datasheet http://www.ti.com/lit/ds/symlink/drv8833.pdf
+		
+		Para o bom funcionamento da biblioteca, eh importante que os motores 
+		sejam soldados segundo uma mesma convencao
+	 */
+	speed =* 255/100;
+	if(side == 0x00){
+		if(dir == 0x00){
+			if(accel == 0x00){
+				digitalWrite(AIN2, accel);
+				analogWrite(AIN1, speed);
+			}else if(accel == 0x01){
+				digitalWrite(AIN1, accel);
+				analogWrite(AIN2, speed);
+			}
+		}else if(dir == 0x01){
+			if(accel == 0x00){
+				digitalWrite(AIN1, accel);
+				analogWrite(AIN2, speed);
+			}else if(accel == 0x01){
+				digitalWrite(AIN2, accel);
+				analogWrite(AIN1, speed);
+			}
+		}
+	}else if(side == 0x01){
+		if(dir == 0x00){
+			if(accel == 0x00){
+				digitalWrite(BIN2, accel);
+				analogWrite(BIN1, speed);
+			}else if(accel == 0x01){
+				digitalWrite(BIN1, accel);
+				analogWrite(BIN2, speed);
+			}
+		}else if(dir == 0x01){
+			if(accel == 0x00){
+				digitalWrite(BIN1, accel);
+				analogWrite(BIN2, speed);
+			}else if(accel == 0x01){
+				digitalWrite(BIN2, accel);
+				analogWrite(BIN1, speed);
+			}
+		}
+	}
+}
+	
+void ThunderKit::stopAll(){
+	/*
+		Para os dois motores rapidamente
+	 */
+	
+	digitalWrite(AIN1, LOW);
+	digitalWrite(BIN1, LOW);
+	digitalWrite(AIN2, LOW);
+	digitalWrite(BIN2, LOW);
+}

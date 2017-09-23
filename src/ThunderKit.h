@@ -6,7 +6,6 @@
 #endif
 
 #include "Arduino.h"
-#include<vector.h>
 
 // Motors
 #define AIN1   D13
@@ -21,8 +20,8 @@
 #define ESQ 0x00
 #define DIR 0x01
 
-#define HOR 0x01
-#define AHOR 0x00
+#define HOR 0x00
+#define AHOR 0x01
 
 // LEDs
 #define LED    D13
@@ -49,7 +48,7 @@ class ThunderKit {
 		 * Motores
 		 */
 		 
-		void setSpeed(int side, int dir, int speed);
+		void setSpeed(int side, int dir, int speed, int accel);
 		void stopAll();
 		
 	private:
@@ -69,7 +68,7 @@ class ThunderKit {
 			uint8_t pino;
 			uint8_t limiar;
 		};
-		sensor_linha sensors[6];
+		sensor_linha sensors[5];
 };
 
 #endif

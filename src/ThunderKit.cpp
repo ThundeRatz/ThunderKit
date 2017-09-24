@@ -64,6 +64,9 @@ int ThunderKit::begin() {
 	Serial.println();
 
 	// Confugracao motores e outras coisas
+	for(int i = 0; i < 5; i++){		
+		sensors[i].pino = -1; sensors[i].limiar = -1;
+	}
 	Serial.println("configuração concluida!");
 
 	return 0;
@@ -107,4 +110,98 @@ int ThunderKit::send_msg(char* msg) {
 	Serial.println(recv_str);
 
 	return 0;
+}
+
+#define FIRST_SENSOR A1
+
+void ThunderKit::addSensor(int pin, int threshold=512){
+	
+	/*
+		Recebe: Numero do pino do sensor e limiar de cor. Valor default para limiar = 512
+		Reserva um espaco na memoria para o sensor
+	*/
+	
+	sensors[pin-FIRST_SENSOR].pino = pin;  sensors[pin-FIRST_SENSOR].limiar = threshold;
+	pinMode(pin, INPUT);
+}
+
+void ThunderKit::setThreshold(int pin, int threshold){
+	
+	/*
+		Recebe: Numero do sensor| limiar a ser designado
+	*/
+	
+	sensors[pin-FIRST_SENSOR].limiar = threshold;	
+}
+
+uint8_t ThunderKit::getColor(int num_sensor){
+	
+	/*
+		Recebe: Numero do sensor
+		Retorna: 0 - caso abaixo do limiar (preto) | 1 - caso acima do limiar (branco) | -1 - caso num_sensor invalido
+	*/
+	
+	uint16_t reading = analogRead(sensors[num_sensor-FIRST_SENSOR].pino);
+	return reading >= sensors[num_sensor-FIRST_SENSOR].limiar;
+}
+
+uint16_t ThunderKit::getReading(int num_sensor){
+	
+	/*
+		Recebe: Numero do sensor
+		Retorna: Leitura analogica do pino
+	*/
+
+  if(num_sensor > 5 || num_sensor < 0){
+    return -1;  
+  }
+	if(sensors[num_sensor-FIRST_SENSOR].pino == -1){
+		return -1;
+	}
+	uint16_t reading = analogRead(sensors[num_sensor-FIRST_SENSOR].pino);
+	return reading;
+}
+
+void ThunderKit::setSpeed(int vel_esq, int vel_dir){
+	
+	/*
+		Recebe: vel_esq (-100 -> 100) | vel_dir (-100 -> 100)
+		vel_esq	-> Velocidade do motor esquerdi
+		vel_dir	-> Qual o sentido de rotacao
+		
+		De acordo com a pg 9 do datasheet http://www.ti.com/lit/ds/symlink/drv8833.pdf
+	 */
+	vel_esq = constrain(vel_esq, -100, 100);
+	vel_dir = constrain(vel_dir, -100, 100);
+	
+	if(vel_esq > 0){
+		vel_esq = map(vel_esq, 0, 100, 0, 255);
+		analogWrite(AIN1, vel_esq);
+		analogWrite(AIN2, 0);
+	}else{
+		vel_esq = map(vel_esq, 0, -100, 0, 255);
+		analogWrite(AIN1, 0);
+		analogWrite(AIN2, vel_esq);
+	}
+	
+	if(vel_dir > 0){
+		vel_esq = map(vel_dir, 0, 100, 0, 255);
+		analogWrite(BIN2, vel_dir);
+		analogWrite(BIN1, 0);
+	}else{
+		vel_esq = map(vel_dir, 0, -100, 0, 255);
+		analogWrite(BIN2, 0);
+		analogWrite(BIN1, vel_dir);
+	}
+}
+	
+void ThunderKit::stopAll(){
+	/*
+		Para os dois motores rapidamente
+	 */
+	
+	analogWrite(AIN1, 0);
+	analogWrite(BIN1, 0);
+	analogWrite(AIN2, 0);
+	analogWrite(BIN2, 0);
 }

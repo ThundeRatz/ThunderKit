@@ -65,7 +65,7 @@ int ThunderKit::begin() {
 
 	// Confugracao motores e outras coisas
 	for(int i = 0; i < 5; i++){		
-		sensors[i].pin = -1; sensors[i].limiar = -1;
+		sensors[i].pino = -1; sensors[i].limiar = -1;
 	}
 	Serial.println("configuração concluida!");
 
@@ -121,7 +121,7 @@ void ThunderKit::addSensor(int pin, int threshold=512){
 		Reserva um espaco na memoria para o sensor
 	*/
 	
-	sensors[pin-FIRST_SENSOR].pin = pin;  sensors[pin-FIRST_SENSOR].limiar = threshold;
+	sensors[pin-FIRST_SENSOR].pino = pin;  sensors[pin-FIRST_SENSOR].limiar = threshold;
 	pinMode(pin, INPUT);
 }
 
@@ -151,65 +151,47 @@ uint16_t ThunderKit::getReading(int num_sensor){
 		Recebe: Numero do sensor
 		Retorna: Leitura analogica do pino
 	*/
-	
-	if(num_sensor >= qtde_sensors){
+
+  if(num_sensor > 5 || num_sensor < 0){
+    return -1;  
+  }
+	if(sensors[num_sensor-FIRST_SENSOR].pino == -1){
 		return -1;
 	}
 	uint16_t reading = analogRead(sensors[num_sensor-FIRST_SENSOR].pino);
 	return reading;
 }
 
-void ThunderKit::setSpeed(int side, int dir, int speed, int accel){
+void ThunderKit::setSpeed(int vel_esq, int vel_dir){
 	
 	/*
-		Recebe: side (ESQ,DIR)| dir (HOR, AHOR)| speed (0->100)| accel (FAST, SLOW)
-		side 	-> Qual motor se refere
-		dir 	-> Qual o sentido de rotacao
-		speed 	-> Velocidade entra 0 e 100%
-		accel 	-> Modo de aceleracao, rapido ou lento
+		Recebe: vel_esq (-100 -> 100) | vel_dir (-100 -> 100)
+		vel_esq	-> Velocidade do motor esquerdi
+		vel_dir	-> Qual o sentido de rotacao
 		
 		De acordo com a pg 9 do datasheet http://www.ti.com/lit/ds/symlink/drv8833.pdf
-		
-		Para o bom funcionamento da biblioteca, eh importante que os motores 
-		sejam soldados segundo uma mesma convencao
 	 */
-	speed =* 255/100;
-	if(side == 0x00){
-		if(dir == 0x00){
-			if(accel == 0x00){
-				digitalWrite(AIN2, accel);
-				analogWrite(AIN1, speed);
-			}else if(accel == 0x01){
-				digitalWrite(AIN1, accel);
-				analogWrite(AIN2, speed);
-			}
-		}else if(dir == 0x01){
-			if(accel == 0x00){
-				digitalWrite(AIN1, accel);
-				analogWrite(AIN2, speed);
-			}else if(accel == 0x01){
-				digitalWrite(AIN2, accel);
-				analogWrite(AIN1, speed);
-			}
-		}
-	}else if(side == 0x01){
-		if(dir == 0x00){
-			if(accel == 0x00){
-				digitalWrite(BIN2, accel);
-				analogWrite(BIN1, speed);
-			}else if(accel == 0x01){
-				digitalWrite(BIN1, accel);
-				analogWrite(BIN2, speed);
-			}
-		}else if(dir == 0x01){
-			if(accel == 0x00){
-				digitalWrite(BIN1, accel);
-				analogWrite(BIN2, speed);
-			}else if(accel == 0x01){
-				digitalWrite(BIN2, accel);
-				analogWrite(BIN1, speed);
-			}
-		}
+	vel_esq = constrain(vel_esq, -100, 100);
+	vel_dir = constrain(vel_dir, -100, 100);
+	
+	if(vel_esq > 0){
+		vel_esq = map(vel_esq, 0, 100, 0, 255);
+		analogWrite(AIN1, vel_esq);
+		analogWrite(AIN2, 0);
+	}else{
+		vel_esq = map(vel_esq, 0, -100, 0, 255);
+		analogWrite(AIN1, 0);
+		analogWrite(AIN2, vel_esq);
+	}
+	
+	if(vel_dir > 0){
+		vel_esq = map(vel_dir, 0, 100, 0, 255);
+		analogWrite(BIN2, vel_dir);
+		analogWrite(BIN1, 0);
+	}else{
+		vel_esq = map(vel_dir, 0, -100, 0, 255);
+		analogWrite(BIN2, 0);
+		analogWrite(BIN1, vel_dir);
 	}
 }
 	
@@ -218,8 +200,8 @@ void ThunderKit::stopAll(){
 		Para os dois motores rapidamente
 	 */
 	
-	digitalWrite(AIN1, LOW);
-	digitalWrite(BIN1, LOW);
-	digitalWrite(AIN2, LOW);
-	digitalWrite(BIN2, LOW);
+	analogWrite(AIN1, 0);
+	analogWrite(BIN1, 0);
+	analogWrite(AIN2, 0);
+	analogWrite(BIN2, 0);
 }

@@ -48,7 +48,7 @@ class ThunderKit {
 		 * Motores
 		 */
 		 
-		void setSpeed(int side, int dir, int speed, int accel);
+		void setSpeed(int vel_esq, int vel_dir);
 		void stopAll();
 		
 	private:

@@ -109,15 +109,16 @@ int ThunderKit::send_msg(char* msg) {
 	return 0;
 }
 
-void ThunderKit::ligar_led(char led){
+//LIGA O LED (coloquei em PWM pra poder mudar a intensidade depois se quiser)
+void ThunderKit::ligar_led(int led){
 	analogWrite(led, 255);
 }
 
-void ThunderKit::desligar_led(char led){
+void ThunderKit::desligar_led(int led){
 	analogWrite(led, 0);
 }
 
-void ThunderKit::intens_led(char led, int dc){
+void ThunderKit::intens_led(int led, int dc){
 	dc *=  255.0/100 ;
 	analogWrite(led, dc);
 }

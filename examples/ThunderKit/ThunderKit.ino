@@ -11,6 +11,11 @@ void setup() {
 }
 
 void loop() {
+	uint8_t envio[] = { 255, 0, 127, 0, 128, 254 };
+	Serial1.write(envio , 6);
+
 	if (Serial1.available())
 		Serial.println(Serial1.readString());
+
+	delay(1000);
 }

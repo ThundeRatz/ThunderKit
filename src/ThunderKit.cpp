@@ -64,7 +64,12 @@ int ThunderKit::begin() {
 	Serial.println();
 
 	// Confugracao motores e outras coisas
-	Serial.println("configuração concluida!");
+	for(int i = 0; i < 5; i++){
+		sensors[i].pino = -1;
+		sensors[i].limiar = -1;
+	}
+
+	Serial.println("Configuração concluida!");
 
 	return 0;
 }
@@ -109,6 +114,86 @@ int ThunderKit::send_msg(char* msg) {
 	return 0;
 }
 
+/*
+	Recebe: Numero do pino do sensor e limiar de cor. Valor default para limiar = 512
+	Reserva um espaco na memoria para o sensor
+*/
+void ThunderKit::addSensor(int pin, int threshold=512){
+	sensors[pin-FIRST_SENSOR].pino = pin;  sensors[pin-FIRST_SENSOR].limiar = threshold;
+	pinMode(pin, INPUT);
+}
+
+/*
+	Recebe: Numero do sensor| limiar a ser designado
+*/
+void ThunderKit::setThreshold(int pin, int threshold){
+	sensors[pin-FIRST_SENSOR].limiar = threshold;
+}
+
+/*
+	Recebe: Numero do sensor
+	Retorna: 0 - caso abaixo do limiar (preto) | 1 - caso acima do limiar (branco) | -1 - caso num_sensor invalido
+*/
+int ThunderKit::getColor(int num_sensor) {
+	uint16_t reading = analogRead(sensors[num_sensor-FIRST_SENSOR].pino);
+	return reading >= sensors[num_sensor-FIRST_SENSOR].limiar;
+}
+
+/*
+	Recebe: Numero do sensor
+	Retorna: Leitura analogica do pino
+*/
+int ThunderKit::getReading(int num_sensor) {
+	if(num_sensor > 5 || num_sensor < 0)
+		return -1;
+
+	if(sensors[num_sensor-FIRST_SENSOR].pino == -1)
+		return -1;
+
+	return analogRead(sensors[num_sensor-FIRST_SENSOR].pino);
+}
+
+/*
+	Recebe: vel_esq (-100 -> 100) | vel_dir (-100 -> 100)
+	vel_esq	-> Velocidade do motor esquerdi
+	vel_dir	-> Qual o sentido de rotacao
+
+	De acordo com a pg 9 do datasheet http://www.ti.com/lit/ds/symlink/drv8833.pdf
+ */
+void ThunderKit::setSpeed(int vel_esq, int vel_dir){
+	vel_esq = constrain(vel_esq, -100, 100);
+	vel_dir = constrain(vel_dir, -100, 100);
+
+	vel_esq = map(vel_esq, -100, 100, -255, 255);
+	vel_dir = map(vel_dir, -100, 100, -255, 255);
+
+	if (vel_esq > 0){
+		analogWrite(AIN1, vel_esq);
+		analogWrite(AIN2, 0);
+	} else {
+		analogWrite(AIN1, 0);
+		analogWrite(AIN2, abs(vel_esq));
+	}
+
+	if (vel_dir > 0) {
+		analogWrite(BIN2, vel_dir);
+		analogWrite(BIN1, 0);
+	} else {
+		analogWrite(BIN2, 0);
+		analogWrite(BIN1, abs(vel_dir));
+	}
+}
+
+/*
+	Para os dois motores rapidamente
+ */
+void ThunderKit::stopAll(){
+	analogWrite(AIN1, 0);
+	analogWrite(BIN1, 0);
+	analogWrite(AIN2, 0);
+	analogWrite(BIN2, 0);
+}
+
 //LIGA O LED (coloquei em PWM pra poder mudar a intensidade depois se quiser)
 void ThunderKit::ligar_led(int led){
 	analogWrite(led, 255);
@@ -122,4 +207,3 @@ void ThunderKit::intens_led(int led, int dc){
 	dc *=  255.0/100 ;
 	analogWrite(led, dc);
 }
-

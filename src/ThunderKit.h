@@ -27,11 +27,12 @@ class ThunderKit {
 		ThunderKit(int kit_number);
 
 		int begin();
-<<<<<<< HEAD
+
+		//LEDs
 		void ligar_led(char led);
 		void desligar_led(char led);
 		void intens_led(char led, int dc);
-=======
+
 
 		// Sensores linha
 		void addSensor(int pin, int threshold);
@@ -43,7 +44,7 @@ class ThunderKit {
 		void setSpeed(int vel_esq, int vel_dir);
 		void stopAll();
 
->>>>>>> e67fe2aab4cae3a53bd930b13fbc92cc7c04d2a0
+
 	private:
 
 		// Bluetooth

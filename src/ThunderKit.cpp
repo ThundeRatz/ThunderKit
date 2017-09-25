@@ -199,11 +199,13 @@ void ThunderKit::ligar_led(int led){
 	analogWrite(led, 255);
 }
 
+//Desliga o LED
 void ThunderKit::desligar_led(int led){
 	analogWrite(led, 0);
 }
 
-void ThunderKit::intens_led(int led, int dc){
-	dc *=  255.0/100 ;
-	analogWrite(led, dc);
+//Muda a intensidade do LED (0-100)
+void ThunderKit::intens_led(int led, int intensidade){
+	intensidade *=  255.0/100;
+	analogWrite(led, intensidade);
 }

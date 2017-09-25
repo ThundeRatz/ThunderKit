@@ -25,6 +25,9 @@ class ThunderKit {
 		ThunderKit(int kit_number);
 
 		int begin();
+		void ligar_led(char led);
+		void desligar_led(char led);
+		void intens_led(char led, int dc);
 	private:
 		char at_name[20];
 		char recv_str[100];

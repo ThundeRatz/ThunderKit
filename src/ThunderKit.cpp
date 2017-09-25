@@ -108,3 +108,17 @@ int ThunderKit::send_msg(char* msg) {
 
 	return 0;
 }
+
+void ThunderKit::ligar_led(char led){
+	analogWrite(led, 255);
+}
+
+void ThunderKit::desligar_led(char led){
+	analogWrite(led, 0);
+}
+
+void ThunderKit::intens_led(char led, int dc){
+	dc *=  255.0/100 ;
+	analogWrite(led, dc);
+}
+

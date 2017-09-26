@@ -14,10 +14,10 @@ ThunderKit	KEYWORD1
 
 addSensor	KEYWORD2
 setThreshold	KEYWORD2
-getColor		KEYWORD2
+getColor	KEYWORD2
 getReading	KEYWORD2
-setSpeed		KEYWORD2
+setSpeed	KEYWORD2
 stopSpeed	KEYWORD2
-ligar_led		KEYWORD2
+ligar_led	KEYWORD2
 desligar_led	KEYWORD2
-intens_led		KEYWORD2
+intens_led	KEYWORD2

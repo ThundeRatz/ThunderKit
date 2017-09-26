@@ -29,10 +29,8 @@ class ThunderKit {
 		int begin();
 
 		//LEDs
-		void ligar_led(int led);
-		void desligar_led(int led);
-		void intens_led(int led, int intensidade);
-
+		void ligarLed(int led, int intensidade = 100);
+		void desligarLed(int led);
 
 		// Sensores linha
 		void addSensor(int pin, int threshold);
@@ -43,7 +41,6 @@ class ThunderKit {
 		// Motores
 		void setSpeed(int vel_esq, int vel_dir);
 		void stopAll();
-
 
 	private:
 

@@ -12,15 +12,15 @@ void setup() {
 
 void loop() {
 	//Liga e desliga o LED verde do RGB
-	kit.ligar_led(LEDG);
-  delay(1000);
-  kit.desligar_led(LEDG);
-  delay(1000);
+	kit.ligarLED(LEDG);
+	delay(1000);
+	kit.desligarLED(LEDG);
+	delay(1000);
 
-  //Varia a intensidade de 0 a 100 do LED azul
-  for(int i = 0; i <= 100; i++){
-    kit.intens_led(LEDB, i);
-    delay(100);
-  }
-  
+	//Varia a intensidade de 0 a 100 do LED azul
+	for (int i = 0; i <= 100; i++) {
+		kit.ligarLED(LEDB, i);
+		delay(100);
+	}
+
 }

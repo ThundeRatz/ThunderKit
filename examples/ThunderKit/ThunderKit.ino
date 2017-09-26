@@ -11,16 +11,11 @@ void setup() {
 }
 
 void loop() {
-	//Liga e desliga o LED verde do RGB
-	kit.ligar_led(LEDG);
-  delay(1000);
-  kit.desligar_led(LEDG);
-  delay(1000);
+	uint8_t envio[] = { 255, 0, 127, 0, 128, 254 };
+	Serial1.write(envio , 6);
 
-  //Varia a intensidade de 0 a 100 do LED azul
-  for(int i = 0; i <= 100; i++){
-    kit.intens_led(LEDB, i);
-    delay(100);
-  }
-  
+	if (Serial1.available())
+		Serial.println(Serial1.readString());
+
+	delay(1000);
 }

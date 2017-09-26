@@ -151,7 +151,7 @@ int ThunderKit::getReading(int num_sensor) {
 
 /*
 	Recebe: vel_esq (-100 -> 100) | vel_dir (-100 -> 100)
-	vel_esq	-> Velocidade do motor esquerdi
+	vel_esq	-> Velocidade do motor esquerdo
 	vel_dir	-> Qual o sentido de rotacao
 
 	De acordo com a pg 9 do datasheet http://www.ti.com/lit/ds/symlink/drv8833.pdf
@@ -191,17 +191,14 @@ void ThunderKit::stopAll() {
 }
 
 //LIGA O LED (coloquei em PWM pra poder mudar a intensidade depois se quiser)
-void ThunderKit::ligar_led(int led){
-	analogWrite(led, 255);
+void ThunderKit::ligarLed(int led, int intensidade = 100) {
+	intensidade = constrain(intensidade, 0, 100);
+	intensidade = map(intensidade, 0, 100, 0, 255);
+
+	analogWrite(led, intensidade);
 }
 
 //Desliga o LED
-void ThunderKit::desligar_led(int led){
+void ThunderKit::desligarLed(int led) {
 	analogWrite(led, 0);
-}
-
-//Muda a intensidade do LED (0-100)
-void ThunderKit::intens_led(int led, int intensidade){
-	intensidade *=  255.0/100;
-	analogWrite(led, intensidade);
 }

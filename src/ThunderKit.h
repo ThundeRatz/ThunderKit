@@ -28,6 +28,12 @@ class ThunderKit {
 
 		int begin();
 
+		//LEDs
+		void ligar_led(int led);
+		void desligar_led(int led);
+		void intens_led(int led, int intensidade);
+
+
 		// Sensores linha
 		void addSensor(int pin, int threshold);
 		void setThreshold(int num_sensor, int threshold);
@@ -37,6 +43,7 @@ class ThunderKit {
 		// Motores
 		void setSpeed(int vel_esq, int vel_dir);
 		void stopAll();
+
 
 	private:
 

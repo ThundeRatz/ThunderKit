@@ -8,7 +8,6 @@
 // Declara o kit, necessario passar o numero
 // para nomear o dispositivo Bluetooth
 
-
 ThunderKit kit(1);
 
 void setup() {

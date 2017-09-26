@@ -23,7 +23,7 @@ int ThunderKit::begin() {
 		Serial1.begin(9600);
 		delay(500);
 		Serial.println("try 9600...");
-		if(send_msg("AT") == 0) {
+		if (send_msg("AT") == 0) {
 			break;
 		}
 		Serial.println(" NO");
@@ -32,7 +32,7 @@ int ThunderKit::begin() {
 		Serial1.begin(115200);
 		delay(500);
 		Serial.println("try 115200...");
-		if(send_msg("AT") == 0) {
+		if (send_msg("AT") == 0) {
 			break;
 		}
 		Serial.println(" NO");
@@ -64,10 +64,6 @@ int ThunderKit::begin() {
 	Serial.println();
 
 	// Confugracao motores e outras coisas
-	for(int i = 0; i < 5; i++){
-		sensors[i].pino = -1;
-		sensors[i].limiar = -1;
-	}
 
 	Serial.println("Configuração concluida!");
 
@@ -105,7 +101,7 @@ int ThunderKit::send_msg(char* msg) {
 	Serial1.print(msg);
 	delay(1);
 
-	if(recv_msg(500) != 0)
+	if (recv_msg(500) != 0)
 		return -1;
 
 	Serial.print("Recebido: ");
@@ -118,16 +114,16 @@ int ThunderKit::send_msg(char* msg) {
 	Recebe: Numero do pino do sensor e limiar de cor. Valor default para limiar = 512
 	Reserva um espaco na memoria para o sensor
 */
-void ThunderKit::addSensor(int pin, int threshold=512){
-	sensors[pin-FIRST_SENSOR].pino = pin;  sensors[pin-FIRST_SENSOR].limiar = threshold;
+void ThunderKit::addSensor(int pin, int threshold=512) {
+	sensors[pin - FIRST_SENSOR].pino = pin;  sensors[pin - FIRST_SENSOR].limiar = threshold;
 	pinMode(pin, INPUT);
 }
 
 /*
 	Recebe: Numero do sensor| limiar a ser designado
 */
-void ThunderKit::setThreshold(int pin, int threshold){
-	sensors[pin-FIRST_SENSOR].limiar = threshold;
+void ThunderKit::setThreshold(int pin, int threshold) {
+	sensors[pin - FIRST_SENSOR].limiar = threshold;
 }
 
 /*
@@ -135,8 +131,8 @@ void ThunderKit::setThreshold(int pin, int threshold){
 	Retorna: 0 - caso abaixo do limiar (preto) | 1 - caso acima do limiar (branco) | -1 - caso num_sensor invalido
 */
 int ThunderKit::getColor(int num_sensor) {
-	uint16_t reading = analogRead(sensors[num_sensor-FIRST_SENSOR].pino);
-	return reading >= sensors[num_sensor-FIRST_SENSOR].limiar;
+	uint16_t reading = analogRead(sensors[num_sensor - FIRST_SENSOR].pino);
+	return reading >= sensors[num_sensor - FIRST_SENSOR].limiar;
 }
 
 /*
@@ -144,10 +140,10 @@ int ThunderKit::getColor(int num_sensor) {
 	Retorna: Leitura analogica do pino
 */
 int ThunderKit::getReading(int num_sensor) {
-	if(num_sensor > 5 || num_sensor < 0)
+	if (num_sensor > 5 || num_sensor < 0)
 		return -1;
 
-	if(sensors[num_sensor-FIRST_SENSOR].pino == -1)
+	if (sensors[num_sensor - FIRST_SENSOR].pino == -1)
 		return -1;
 
 	return analogRead(sensors[num_sensor-FIRST_SENSOR].pino);
@@ -160,14 +156,14 @@ int ThunderKit::getReading(int num_sensor) {
 
 	De acordo com a pg 9 do datasheet http://www.ti.com/lit/ds/symlink/drv8833.pdf
  */
-void ThunderKit::setSpeed(int vel_esq, int vel_dir){
+void ThunderKit::setSpeed(int vel_esq, int vel_dir) {
 	vel_esq = constrain(vel_esq, -100, 100);
 	vel_dir = constrain(vel_dir, -100, 100);
 
 	vel_esq = map(vel_esq, -100, 100, -255, 255);
 	vel_dir = map(vel_dir, -100, 100, -255, 255);
 
-	if (vel_esq > 0){
+	if (vel_esq > 0) {
 		analogWrite(AIN1, vel_esq);
 		analogWrite(AIN2, 0);
 	} else {
@@ -187,7 +183,7 @@ void ThunderKit::setSpeed(int vel_esq, int vel_dir){
 /*
 	Para os dois motores rapidamente
  */
-void ThunderKit::stopAll(){
+void ThunderKit::stopAll() {
 	analogWrite(AIN1, 0);
 	analogWrite(BIN1, 0);
 	analogWrite(AIN2, 0);

@@ -46,12 +46,12 @@ class ThunderKit {
 		int recv_msg(int timeout);
 		int send_msg(char* msg);
 
-		struct sensor_linha{
+		struct sensor_linha {
 			int pino;
 			int limiar;
-		};
 
-		sensor_linha sensors[5];
+			sensor_linha() : pino(-1), limiar(-1) {}
+		} sensors[5];
 };
 
 #endif

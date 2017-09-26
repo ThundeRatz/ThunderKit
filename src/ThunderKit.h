@@ -29,9 +29,9 @@ class ThunderKit {
 		int begin();
 
 		//LEDs
-		void ligar_led(char led);
-		void desligar_led(char led);
-		void intens_led(char led, int intensidade);
+		void ligar_led(int led);
+		void desligar_led(int led);
+		void intens_led(int led, int intensidade);
 
 
 		// Sensores linha

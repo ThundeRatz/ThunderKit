@@ -9,10 +9,9 @@
 
 // Motors
 #define AIN1   13
-#define AIN2   11
-#define BIN1   9
-#define BIN2   10
-#define nSLEEP 7
+#define AIN2   10
+#define BIN1   11
+#define BIN2   9
 
 // LEDs
 #define LED    13
@@ -33,7 +32,7 @@ class ThunderKit {
 		void desligarLed(int led);
 
 		// Sensores linha
-		void addSensor(int pin, int threshold);
+		void addSensor(int pin, int threshold = 512);
 		void setThreshold(int num_sensor, int threshold);
 		int getColor(int num_sensor);
 		int getReading(int num_sensor);
@@ -48,7 +47,7 @@ class ThunderKit {
 		char at_name[20];
 		char recv_str[100];
 		int recv_msg(int timeout);
-		int send_msg(char* msg);
+		int send_msg(const String& msg);
 
 		struct sensor_linha {
 			int pino;

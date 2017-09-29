@@ -24,7 +24,8 @@ int ThunderKit::begin() {
 		delay(500);
 		Serial.println("try 9600...");
 		if (send_msg("AT") == 0) {
-			break;
+			if (strcmp(recv_str, "OK") == 0)
+				break;
 		}
 		Serial.println(" NO");
 
@@ -33,7 +34,8 @@ int ThunderKit::begin() {
 		delay(500);
 		Serial.println("try 115200...");
 		if (send_msg("AT") == 0) {
-			break;
+			if (strcmp(recv_str, "OK") == 0)
+				break;
 		}
 		Serial.println(" NO");
 	}
@@ -43,7 +45,7 @@ int ThunderKit::begin() {
 	send_msg("AT+BAUD2");
 	send_msg("AT+AUTH0");
 	send_msg("AT+RESET");
-	Serial1.begin(9500);
+	Serial1.begin(9600);
 	delay(2000);
 
 	send_msg("AT+VERS?");
@@ -58,7 +60,8 @@ int ThunderKit::begin() {
 	delay(2000);
 
 	if (send_msg("AT") != 0)
-		return -1;
+		if (strcmp(recv_str, "OK") == 0)
+			return -1;
 
 	Serial.println("-- Bluetooth OK");
 	Serial.println();
@@ -94,7 +97,7 @@ int ThunderKit::recv_msg(int timeout) {
 	return 0;
 }
 
-int ThunderKit::send_msg(char* msg) {
+int ThunderKit::send_msg(const String& msg) {
 	Serial.print("Enviando: ");
 	Serial.println(msg);
 
@@ -114,7 +117,7 @@ int ThunderKit::send_msg(char* msg) {
 	Recebe: Numero do pino do sensor e limiar de cor. Valor default para limiar = 512
 	Reserva um espaco na memoria para o sensor
 */
-void ThunderKit::addSensor(int pin, int threshold=512) {
+void ThunderKit::addSensor(int pin, int threshold) {
 	sensors[pin - FIRST_SENSOR].pino = pin;  sensors[pin - FIRST_SENSOR].limiar = threshold;
 	pinMode(pin, INPUT);
 }
@@ -191,7 +194,7 @@ void ThunderKit::stopAll() {
 }
 
 //LIGA O LED (coloquei em PWM pra poder mudar a intensidade depois se quiser)
-void ThunderKit::ligarLed(int led, int intensidade = 100) {
+void ThunderKit::ligarLed(int led, int intensidade) {
 	intensidade = constrain(intensidade, 0, 100);
 	intensidade = map(intensidade, 0, 100, 0, 255);
 

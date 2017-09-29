@@ -1,12 +1,12 @@
 #include "Arduino.h"
-#include "Wire.h"
-
-#include <string.h>
-
 #include "ThunderKit.h"
+
+const int __sensors[] = { A1, A2, A3, A4, A5 };
 
 ThunderKit::ThunderKit(int kit_number) {
 	sprintf(at_name, "AT+NAMBThunderKit%d", kit_number);
+	motors_on = false;
+	modo_atual = RC;
 }
 
 int ThunderKit::begin() {
@@ -66,7 +66,18 @@ int ThunderKit::begin() {
 	Serial.println("-- Bluetooth OK");
 	Serial.println();
 
-	// Confugracao motores e outras coisas
+	// Sensores
+	Serial.println("-- Sensores");
+	for (int i = 0; i < 5; i++) {
+		sensors[i].pino = __sensors[i];
+		sensors[i].limiar = 512;
+		pinMode(__sensors[i], INPUT);
+		Serial.print("Sensor ");
+		Serial.print(i);
+		Serial.println(" OK");
+	}
+	Serial.println("-- Sensores OK");
+	Serial.println();
 
 	Serial.println("Configuração concluida!");
 
@@ -114,42 +125,52 @@ int ThunderKit::send_msg(const String& msg) {
 }
 
 /*
-	Recebe: Numero do pino do sensor e limiar de cor. Valor default para limiar = 512
-	Reserva um espaco na memoria para o sensor
-*/
-void ThunderKit::addSensor(int pin, int threshold) {
-	sensors[pin - FIRST_SENSOR].pino = pin;  sensors[pin - FIRST_SENSOR].limiar = threshold;
-	pinMode(pin, INPUT);
-}
-
-/*
 	Recebe: Numero do sensor| limiar a ser designado
 */
-void ThunderKit::setThreshold(int pin, int threshold) {
-	sensors[pin - FIRST_SENSOR].limiar = threshold;
+void ThunderKit::setThreshold(int posicao, int threshold) {
+	sensors[posicao].limiar = threshold;
 }
 
 /*
 	Recebe: Numero do sensor
 	Retorna: 0 - caso abaixo do limiar (preto) | 1 - caso acima do limiar (branco) | -1 - caso num_sensor invalido
 */
-int ThunderKit::getColor(int num_sensor) {
-	uint16_t reading = analogRead(sensors[num_sensor - FIRST_SENSOR].pino);
-	return reading >= sensors[num_sensor - FIRST_SENSOR].limiar;
+int ThunderKit::getColor(int posicao) {
+	uint16_t reading = analogRead(sensors[posicao].pino);
+	return (reading >= sensors[posicao].limiar);
 }
 
 /*
 	Recebe: Numero do sensor
 	Retorna: Leitura analogica do pino
 */
-int ThunderKit::getReading(int num_sensor) {
-	if (num_sensor > 5 || num_sensor < 0)
+int ThunderKit::lerSensor(int posicao) {
+	if (posicao > 5 || posicao < 0)
 		return -1;
 
-	if (sensors[num_sensor - FIRST_SENSOR].pino == -1)
+	if (sensors[posicao].pino == uint8_t(-1))
 		return -1;
 
-	return analogRead(sensors[num_sensor-FIRST_SENSOR].pino);
+	return analogRead(sensors[posicao].pino);
+}
+
+void ThunderKit::ativarMotores() {
+	motors_on = true;
+
+	analogWrite(LED, 0);
+	analogWrite(AIN2, 0);
+}
+
+void ThunderKit::desativarMotores() {
+	if (!motors_on)
+		return;
+
+	analogWrite(AIN1, 0);
+	analogWrite(BIN1, 0);
+	analogWrite(AIN2, 0);
+	analogWrite(BIN2, 0);
+
+	motors_on = false;
 }
 
 /*
@@ -160,6 +181,9 @@ int ThunderKit::getReading(int num_sensor) {
 	De acordo com a pg 9 do datasheet http://www.ti.com/lit/ds/symlink/drv8833.pdf
  */
 void ThunderKit::setSpeed(int vel_esq, int vel_dir) {
+	if (!motors_on)
+		return;
+
 	vel_esq = constrain(vel_esq, -100, 100);
 	vel_dir = constrain(vel_dir, -100, 100);
 
@@ -183,25 +207,32 @@ void ThunderKit::setSpeed(int vel_esq, int vel_dir) {
 	}
 }
 
-/*
-	Para os dois motores rapidamente
- */
-void ThunderKit::stopAll() {
-	analogWrite(AIN1, 0);
-	analogWrite(BIN1, 0);
-	analogWrite(AIN2, 0);
-	analogWrite(BIN2, 0);
+void ThunderKit::ledRGB(int r, int g, int b) {
+	r = map(constrain(r, 0, 100), 0, 100, 0, 255);
+	g = map(constrain(r, 0, 100), 0, 100, 0, 255);
+	b = map(constrain(r, 0, 100), 0, 100, 0, 255);
+
+	analogWrite(LEDR, 255 - r);
+	analogWrite(LEDG, 255 - g);
+	analogWrite(LEDB, 255 - b);
 }
 
-//LIGA O LED (coloquei em PWM pra poder mudar a intensidade depois se quiser)
-void ThunderKit::ligarLed(int led, int intensidade) {
-	intensidade = constrain(intensidade, 0, 100);
-	intensidade = map(intensidade, 0, 100, 0, 255);
+void ThunderKit::led(int intensidade) {
+	if (motors_on)
+		return;
 
-	analogWrite(led, intensidade);
+	// Escrevea mesma PWM nos dois pinos
+	// para impedir o motor de girar com
+	// essa funcao
+	analogWrite(LED, intensidade);
+	analogWrite(AIN2, intensidade);
 }
 
-//Desliga o LED
-void ThunderKit::desligarLed(int led) {
-	analogWrite(led, 0);
+void ThunderKit::ledArcoIris() {
+	// Muda as cores aleatoriamente por 5 segundos
+	for (uint16_t i = 0; i < 50000; i++) {
+		ledRGB(random(100), random(100), random(100));
+		delay(10);
+	}
 }
+

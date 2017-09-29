@@ -8,12 +8,7 @@ void setup() {
 		Serial.println("Erro na inicialização :(");
 		while(1);
 	}
-	// Serial.begin(9600);
-	pinMode(13, OUTPUT);
-	digitalWrite(13, HIGH);
-	// analogWrite(6, 200);
-	// analogWrite(5, 100);
-	// analogWrite(SCL, 100);
+	kit.ledArcoIris();
 }
 
 void loop() {
@@ -22,6 +17,8 @@ void loop() {
 
 	if (Serial1.available())
 		Serial.println(Serial1.readString());
+
+	delay(100);
 
 	// kit.setSpeed(50, 50);
 	// delay(5000);

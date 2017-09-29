@@ -19,39 +19,58 @@
 #define LEDG   5
 #define LEDB   6
 
-#define FIRST_SENSOR A1
-
 class ThunderKit {
 	public:
 		ThunderKit(int kit_number);
 
 		int begin();
 
-		//LEDs
-		void ligarLed(int led, int intensidade = 100);
-		void desligarLed(int led);
+		// App Commands
+		int appCommand();
+
+		// Modo
+		void modoRC();
+		void modoSeguidor();
+
+		// LEDs
+		void ledRGB(int r, int g, int b);
+		void led(int intensidade = 100);
+		void ledArcoIris();
 
 		// Sensores linha
-		void addSensor(int pin, int threshold = 512);
-		void setThreshold(int num_sensor, int threshold);
-		int getColor(int num_sensor);
-		int getReading(int num_sensor);
+		void setThreshold(int posicao, int threshold);
+		int getColor(int posicao);
+		int lerSensor(int posicao);
 
 		// Motores
+		void ativarMotores();
 		void setSpeed(int vel_esq, int vel_dir);
-		void stopAll();
+		void desativarMotores();
 
 	private:
+		// LED azul é ligado junto com os Motores
+		// Variavel para nao mexer no led se os motores
+		// estiverem ativados
+		boolean motors_on;
+
+		enum modo_t {
+			SEGUIDOR_ON,
+			SEGUIDOR_OFF,
+			RC
+		} modo_atual;
 
 		// Bluetooth
 		char at_name[20];
 		char recv_str[100];
+
+		uint8_t recv_packet[20];
+
 		int recv_msg(int timeout);
 		int send_msg(const String& msg);
 
 		struct sensor_linha {
-			int pino;
-			int limiar;
+			uint8_t pino;
+			uint16_t limiar;
 
 			sensor_linha() : pino(-1), limiar(-1) {}
 		} sensors[5];

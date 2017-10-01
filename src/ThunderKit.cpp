@@ -6,7 +6,8 @@ const int __sensors[] = { A1, A2, A3, A4, A5 };
 ThunderKit::ThunderKit(int kit_number) {
 	sprintf(at_name, "AT+NAMBThunderKit%d", kit_number);
 	motors_on = false;
-	modo_atual = RC;
+	seguidor_on = false;
+	joystick_pos = 0;
 }
 
 int ThunderKit::begin() {
@@ -82,6 +83,43 @@ int ThunderKit::begin() {
 	Serial.println("Configuração concluida!");
 
 	return 0;
+}
+
+int ThunderKit::appCommand() {
+	if (!Serial1.available())
+		return -2;
+
+	int temp = Serial1.read();
+
+	// Serial.println(temp);
+	if (temp >= 0 && temp < 84) {
+		joystick_pos = temp;
+		seguidor_on = false;
+	} else {
+		seguidor_on = temp == 200 ? true : false;
+		joystick_pos = 0;
+	}
+
+	return 0;
+}
+
+int ThunderKit::joystick() {
+	return joystick_pos;
+}
+
+int ThunderKit::joystick(int parte) {
+	if (parte == DIRECAO)
+		return joystick_pos/10;
+
+	if (parte == VELOCIDADE)
+		return joystick_pos%10;
+
+	return 0;
+}
+
+
+boolean ThunderKit::seguidor() {
+	return seguidor_on;
 }
 
 int ThunderKit::recv_msg(int timeout) {
@@ -209,12 +247,12 @@ void ThunderKit::setSpeed(int vel_esq, int vel_dir) {
 
 void ThunderKit::ledRGB(int r, int g, int b) {
 	r = map(constrain(r, 0, 100), 0, 100, 0, 255);
-	g = map(constrain(r, 0, 100), 0, 100, 0, 255);
-	b = map(constrain(r, 0, 100), 0, 100, 0, 255);
+	g = map(constrain(g, 0, 100), 0, 100, 0, 255);
+	b = map(constrain(b, 0, 100), 0, 100, 0, 255);
 
 	analogWrite(LEDR, 255 - r);
 	analogWrite(LEDG, 255 - g);
-	analogWrite(LEDB, 255 - b);
+	analogWrite(LEDB, 255);
 }
 
 void ThunderKit::led(int intensidade) {
@@ -230,7 +268,7 @@ void ThunderKit::led(int intensidade) {
 
 void ThunderKit::ledArcoIris() {
 	// Muda as cores aleatoriamente por 5 segundos
-	for (uint16_t i = 0; i < 50000; i++) {
+	for (uint16_t i = 0; i < 500; i++) {
 		ledRGB(random(100), random(100), random(100));
 		delay(10);
 	}

@@ -19,6 +19,9 @@
 #define LEDG   5
 #define LEDB   6
 
+#define DIRECAO 0
+#define VELOCIDADE 1
+
 class ThunderKit {
 	public:
 		ThunderKit(int kit_number);
@@ -27,10 +30,9 @@ class ThunderKit {
 
 		// App Commands
 		int appCommand();
-
-		// Modo
-		void modoRC();
-		void modoSeguidor();
+		int joystick();
+		int joystick(int tipo);
+		boolean seguidor();
 
 		// LEDs
 		void ledRGB(int r, int g, int b);
@@ -52,12 +54,8 @@ class ThunderKit {
 		// Variavel para nao mexer no led se os motores
 		// estiverem ativados
 		boolean motors_on;
-
-		enum modo_t {
-			SEGUIDOR_ON,
-			SEGUIDOR_OFF,
-			RC
-		} modo_atual;
+		boolean seguidor_on;
+		int joystick_pos;
 
 		// Bluetooth
 		char at_name[20];

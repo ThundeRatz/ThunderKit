@@ -8,29 +8,51 @@ void setup() {
 		Serial.println("Erro na inicialização :(");
 		while(1);
 	}
-	kit.ledArcoIris();
+	// kit.ledArcoIris();
+	// kit.ativarMotores();
 }
 
 void loop() {
-	uint8_t envio[] = { 255, 0, 127, 0, 128, 254 };
-	Serial1.write(envio, 6);
+	kit.appCommand();
 
-	if (Serial1.available())
-		Serial.println(Serial1.readString());
+	if (kit.seguidor())
+		seguirLinha();
 
-	delay(100);
+	if (kit.joystick() > 0)
+		mover();
 
-	// kit.setSpeed(50, 50);
-	// delay(5000);
-	// kit.setSpeed(-50, -50);
-	// delay(5000);
-
-	// delay(1000);
-	// Serial.println("Up!");
-	// for(int i = -100; i <= 100; i++) {
-	// 	kit.setSpeed(i, i);
-	// 	analogWrite(5, abs(i));
-	// 	delay(10);
-	// }
+	delay(10);
 }
 
+void seguirLinha() {
+	Serial.print("Seguindo a linha!");
+}
+
+void mover() {
+	int direcao = kit.joystick(DIRECAO);
+	int velocidade = kit.joystick(VELOCIDADE);
+
+	if (velocidade == 1)
+		velocidade = 30;
+	else if (velocidade == 2)
+		velocidade = 60;
+	else if (velocidade == 3)
+		velocidade = 100;
+
+	if (direcao == 1)      // Frente
+		kit.setSpeed(velocidade, velocidade);
+	else if (direcao == 2) // Frente Direita
+		kit.setSpeed(velocidade, velocidade/3);
+	else if (direcao == 3) // Direita
+		kit.setSpeed(velocidade, -velocidade);
+	else if (direcao == 4) // Tras Direita
+		kit.setSpeed(-velocidade, -velocidade/3);
+	else if (direcao == 5) // Tras
+		kit.setSpeed(-velocidade, -velocidade);
+	else if (direcao == 6) // Tras Esquerda
+		kit.setSpeed(-velocidade/3, -velocidade);
+	else if (direcao == 7) // Esquerda
+		kit.setSpeed(-velocidade, velocidade);
+	else if (direcao == 8) // Frente Esquerda
+		kit.setSpeed(velocidade/3, velocidade);
+}

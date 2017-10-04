@@ -274,3 +274,15 @@ void ThunderKit::ledArcoIris() {
 	}
 }
 
+void ThunderKit::sendReadings() {
+	uint16_t message = 0;
+	uint16_t test_values[] = {
+		512, 1023, 0, 14, 794
+	};
+	for (int i = 0; i < 5; i++) {
+		message = 0 << 15 | i << 12 | test_values[i] << 1;
+		Serial.println(message);
+		Serial1.write(message);
+		delay(1);
+	}
+}

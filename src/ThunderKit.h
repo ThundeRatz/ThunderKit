@@ -48,6 +48,7 @@ class ThunderKit {
 		void ativarMotores();
 		void setSpeed(int vel_esq, int vel_dir);
 		void desativarMotores();
+		void sendReadings();
 
 	private:
 		// LED azul é ligado junto com os Motores

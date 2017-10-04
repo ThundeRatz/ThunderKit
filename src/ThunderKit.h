@@ -33,6 +33,7 @@ class ThunderKit {
 		int joystick();
 		int joystick(int tipo);
 		boolean seguidor();
+		void enviarSensores();
 
 		// LEDs
 		void ledRGB(int r, int g, int b);
@@ -48,7 +49,6 @@ class ThunderKit {
 		void ativarMotores();
 		void setSpeed(int vel_esq, int vel_dir);
 		void desativarMotores();
-		void sendReadings();
 
 	private:
 		// LED azul é ligado junto com os Motores

@@ -274,15 +274,16 @@ void ThunderKit::ledArcoIris() {
 	}
 }
 
-void ThunderKit::sendReadings() {
+// Envia a leitura dos sensores para o app
+void ThunderKit::enviarSensores() {
 	uint16_t message = 0;
-	uint16_t test_values[] = {
-		512, 1023, 0, 14, 794
-	};
+	uint8_t msg_bytes[2];
 	for (int i = 0; i < 5; i++) {
-		message = 0 << 15 | i << 12 | test_values[i] << 1;
+		message = 0 << 15 | i << 12 | lerSensor(i) << 1;
+		msg_bytes[0] = message & 0xFF;
+		msg_bytes[1] = message >> 8;
 		Serial.println(message);
-		Serial1.write(message);
-		delay(1);
+		Serial1.write(msg_bytes, 2);
+		delay(100);
 	}
 }

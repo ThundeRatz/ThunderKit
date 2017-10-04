@@ -259,7 +259,7 @@ void ThunderKit::led(int intensidade) {
 	if (motors_on)
 		return;
 
-	// Escrevea mesma PWM nos dois pinos
+	// Escreve a mesma PWM nos dois pinos
 	// para impedir o motor de girar com
 	// essa funcao
 	analogWrite(LED, intensidade);

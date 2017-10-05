@@ -36,8 +36,8 @@ class ThunderKit {
 		void enviarSensores();
 
 		// LEDs
-		void ledRGB(int r, int g, int b);
-		void led(int intensidade = 100);
+		void ledVerde(int intensidade);
+		void ledAzul(int intensidade);
 		void ledArcoIris();
 
 		// Sensores linha
@@ -54,7 +54,6 @@ class ThunderKit {
 		// LED azul é ligado junto com os Motores
 		// Variavel para nao mexer no led se os motores
 		// estiverem ativados
-		boolean motors_on;
 		boolean seguidor_on;
 		int joystick_pos;
 

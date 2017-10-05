@@ -12,11 +12,11 @@ ThunderKit::ThunderKit(int kit_number) {
 
 int ThunderKit::begin() {
 	Serial.begin(9600);
-	Serial.println("ThunderKit started!");
+	Serial.println("ThunderKit iniciado!");
 
 	// Bluetooth setup
 	Serial.println("Configurando tudo...");
-	Serial.println("-- Bluetooh");
+	Serial.println("-- Bluetooth");
 	delay(1000);
 
 	for (;;) {
@@ -193,22 +193,15 @@ int ThunderKit::lerSensor(int posicao) {
 }
 
 void ThunderKit::ativarMotores() {
-	motors_on = true;
-
 	analogWrite(LED, 0);
 	analogWrite(AIN2, 0);
 }
 
 void ThunderKit::desativarMotores() {
-	if (!motors_on)
-		return;
-
 	analogWrite(AIN1, 0);
 	analogWrite(BIN1, 0);
 	analogWrite(AIN2, 0);
 	analogWrite(BIN2, 0);
-
-	motors_on = false;
 }
 
 /*
@@ -245,31 +238,25 @@ void ThunderKit::setSpeed(int vel_esq, int vel_dir) {
 	}
 }
 
-void ThunderKit::ledRGB(int r, int g, int b) {
-	r = map(constrain(r, 0, 100), 0, 100, 0, 255);
-	g = map(constrain(g, 0, 100), 0, 100, 0, 255);
-	b = map(constrain(b, 0, 100), 0, 100, 0, 255);
-
-	analogWrite(LEDR, 255 - r);
-	analogWrite(LEDG, 255 - g);
-	analogWrite(LEDB, 255);
+// Acende o LED verde na intensidade especificada (entre 0 e 100)
+void ThunderKit::ledVerde(int intensidade) {
+	intensidade = map(constrain(intensidade, 0, 100), 0, 100, 0, 255);
+	analogWrite(LEDG, 255 - intensidade);
+	analogWrite(LEDR, 0);  // Pino de alimentacao do LED precisa estar ligado
 }
 
-void ThunderKit::led(int intensidade) {
-	if (motors_on)
-		return;
-
-	// Escreve a mesma PWM nos dois pinos
-	// para impedir o motor de girar com
-	// essa funcao
-	analogWrite(LED, intensidade);
-	analogWrite(AIN2, intensidade);
+// Acende o LED azul na intensidade especificada (entre 0 e 100)
+void ThunderKit::ledAzul(int intensidade) {
+	intensidade = map(constrain(intensidade, 0, 100), 0, 100, 0, 255);
+	analogWrite(LEDB, 255 - intensidade);
+	analogWrite(LEDR, 0);  // Pino de alimentacao do LED precisa estar ligado
 }
 
+// Muda as intensidades dos LEDs verde e azul aleatoriamente por 5 segundos
 void ThunderKit::ledArcoIris() {
-	// Muda as cores aleatoriamente por 5 segundos
 	for (uint16_t i = 0; i < 500; i++) {
-		ledRGB(random(100), random(100), random(100));
+		ledVerde(random(100));
+		ledAzul(random(100));
 		delay(10);
 	}
 }

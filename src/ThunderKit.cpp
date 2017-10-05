@@ -1,11 +1,10 @@
 #include "Arduino.h"
 #include "ThunderKit.h"
 
-const int __sensors[] = { A1, A2, A3, A4, A5 };
+static const int __sensors[] = { A1, A2, A3, A4, A5 };
 
 ThunderKit::ThunderKit(int kit_number) {
 	sprintf(at_name, "AT+NAMBThunderKit%d", kit_number);
-	motors_on = false;
 	seguidor_on = false;
 	joystick_pos = 0;
 }
@@ -192,18 +191,6 @@ int ThunderKit::lerSensor(int posicao) {
 	return analogRead(sensors[posicao].pino);
 }
 
-void ThunderKit::ativarMotores() {
-	analogWrite(LED, 0);
-	analogWrite(AIN2, 0);
-}
-
-void ThunderKit::desativarMotores() {
-	analogWrite(AIN1, 0);
-	analogWrite(BIN1, 0);
-	analogWrite(AIN2, 0);
-	analogWrite(BIN2, 0);
-}
-
 /*
 	Recebe: vel_esq (-100 -> 100) | vel_dir (-100 -> 100)
 	vel_esq	-> Velocidade do motor esquerdo
@@ -212,9 +199,6 @@ void ThunderKit::desativarMotores() {
 	De acordo com a pg 9 do datasheet http://www.ti.com/lit/ds/symlink/drv8833.pdf
  */
 void ThunderKit::motores(int vel_esq, int vel_dir) {
-	if (!motors_on)
-		return;
-
 	vel_esq = constrain(vel_esq, -100, 100);
 	vel_dir = constrain(vel_dir, -100, 100);
 

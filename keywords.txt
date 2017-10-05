@@ -19,17 +19,15 @@ joystick			KEYWORD2
 seguidor			KEYWORD2
 enviarSensores		KEYWORD2
 
-ledRGB				KEYWORD2
-led					KEYWORD2
+ledAzul				KEYWORD2
+ledVerde            KEYWORD2
 ledArcoIris			KEYWORD2
 
 definirLimiar		KEYWORD2
-branco			KEYWORD2
+branco              KEYWORD2
 lerSensor			KEYWORD2
 
-ativarMotores		KEYWORD2
 motores				KEYWORD2
-desativarMotores	KEYWORD2
 
 recv_msg			KEYWORD2
 send_msg			KEYWORD2

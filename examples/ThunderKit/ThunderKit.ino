@@ -16,8 +16,6 @@ void setup() {
 		Serial.println("Erro na inicialização :(");
 		while(1);
 	}
-	// kit.ledArcoIris();
-	// kit.ativarMotores();
 }
 
 void loop() {

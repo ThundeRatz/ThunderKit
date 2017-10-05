@@ -23,9 +23,6 @@ void loop() {
 
 	// Demonstracao do funcionamento dos motores
 
-	// Inicia o modo de controle dos motores
-	kit.ativarMotores();
-
 	// Acelera os motores para frente,
 	// com 80% de velocidade
 	kit.motores(80, 80);
@@ -49,7 +46,7 @@ void loop() {
 	delay(5000);
 
 	// Para os dois motores
-	kit.desativarMotores();
+	kit.motores(0, 0);
 
 	delay(10000);
 }

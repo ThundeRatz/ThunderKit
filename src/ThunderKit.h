@@ -46,9 +46,7 @@ class ThunderKit {
 		int lerSensor(int posicao);
 
 		// Motores
-		void ativarMotores();
 		void motores(int vel_esq, int vel_dir);
-		void desativarMotores();
 
 	private:
 		// LED azul é ligado junto com os Motores

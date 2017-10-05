@@ -165,15 +165,15 @@ int ThunderKit::send_msg(const String& msg) {
 /*
 	Recebe: Numero do sensor| limiar a ser designado
 */
-void ThunderKit::setThreshold(int posicao, int threshold) {
-	sensors[posicao].limiar = threshold;
+void ThunderKit::definirLimiar(int posicao, int limiar) {
+	sensors[posicao].limiar = limiar;
 }
 
 /*
 	Recebe: Numero do sensor
 	Retorna: 0 - caso abaixo do limiar (preto) | 1 - caso acima do limiar (branco) | -1 - caso num_sensor invalido
 */
-int ThunderKit::getColor(int posicao) {
+int ThunderKit::branco(int posicao) {
 	uint16_t reading = analogRead(sensors[posicao].pino);
 	return (reading >= sensors[posicao].limiar);
 }
@@ -211,7 +211,7 @@ void ThunderKit::desativarMotores() {
 
 	De acordo com a pg 9 do datasheet http://www.ti.com/lit/ds/symlink/drv8833.pdf
  */
-void ThunderKit::setSpeed(int vel_esq, int vel_dir) {
+void ThunderKit::motores(int vel_esq, int vel_dir) {
 	if (!motors_on)
 		return;
 

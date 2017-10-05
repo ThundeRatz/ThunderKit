@@ -28,24 +28,24 @@ void loop() {
 
 	// Acelera os motores para frente,
 	// com 80% de velocidade
-	kit.Motores(80, 80);
+	kit.motores(80, 80);
 	delay(5000);
 
 	// Para os motores completamente
-	kit.Motores(0, 0);
+	kit.motores(0, 0);
 	delay(1000);
 
 	// Acelera motores para trás,
 	// com 50% de velocidade
-	kit.Motores(-50, -50);
+	kit.motores(-50, -50);
 	delay(5000);
 
 	// Para o motor esquerdo
-	kit.Motores(0, -50);
+	kit.motores(0, -50);
 	delay(5000);
 
 	// Curva para a esquerda
-	kit.Motores(20, 60);
+	kit.motores(20, 60);
 	delay(5000);
 
 	// Para os dois motores

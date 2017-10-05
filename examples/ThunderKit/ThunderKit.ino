@@ -60,19 +60,19 @@ void mover() {
 	// De acordo com a posicao do joystick,
 	// configura velocidades diferentes para os motores
 	if (direcao == 1)      // Frente
-		kit.Motores(velocidade, velocidade);
+		kit.motores(velocidade, velocidade);
 	else if (direcao == 2) // Frente Direita
-		kit.Motores(velocidade, velocidade/3);
+		kit.motores(velocidade, velocidade/3);
 	else if (direcao == 3) // Direita
-		kit.Motores(velocidade, -velocidade);
+		kit.motores(velocidade, -velocidade);
 	else if (direcao == 4) // Tras Direita
-		kit.Motores(-velocidade, -velocidade/3);
+		kit.motores(-velocidade, -velocidade/3);
 	else if (direcao == 5) // Tras
-		kit.Motores(-velocidade, -velocidade);
+		kit.motores(-velocidade, -velocidade);
 	else if (direcao == 6) // Tras Esquerda
-		kit.Motores(-velocidade/3, -velocidade);
+		kit.motores(-velocidade/3, -velocidade);
 	else if (direcao == 7) // Esquerda
-		kit.Motores(-velocidade, velocidade);
+		kit.motores(-velocidade, velocidade);
 	else if (direcao == 8) // Frente Esquerda
-		kit.Motores(velocidade/3, velocidade);
+		kit.motores(velocidade/3, velocidade);
 }

@@ -17,19 +17,19 @@ void setup() {
 void loop() {
 
     // Caso a linha esteja na esquerda
-    if ((kit.getColor(0) == WHITE) && (kit.getColor(4) == BLACK)) {
+    if ((kit.Branco(0)) && (!kit.Branco(4))) {
         // Acelera mais a roda da direita
-        kit.setSpeed(10, 50);
+        kit.Motores(10, 50);
     }
     // Caso a linha esteja na direita
-    else if ((kit.getColor(0) == BLACK) && (kit.getColor(4) == WHITE)) {
+    else if ((!kit.Branco(0)) && (kit.Branco(4))) {
         // Acelera mais a roda da esquerda
-        kit.setSpeed(50, 10);
+        kit.Motores(50, 10);
     }
     //Caso não leia a linha
     else {
         // Acelera as duas rodas igualmente
-        kit.setSpeed(50, 50);
+        kit.Motores(50, 50);
     }
 
 }

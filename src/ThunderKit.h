@@ -41,13 +41,13 @@ class ThunderKit {
 		void ledArcoIris();
 
 		// Sensores linha
-		void setThreshold(int posicao, int threshold);
-		int getColor(int posicao);
+		void definirLimiar(int posicao, int limiar);
+		int Branco(int posicao);
 		int lerSensor(int posicao);
 
 		// Motores
 		void ativarMotores();
-		void setSpeed(int vel_esq, int vel_dir);
+		void Motores(int vel_esq, int vel_dir);
 		void desativarMotores();
 
 	private:

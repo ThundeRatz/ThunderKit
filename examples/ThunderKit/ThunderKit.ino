@@ -10,7 +10,7 @@
 ThunderKit kit(1);
 
 void setup() {
-	
+
 	// Inicia a biblioteca do kit, aborta a execucao se falhar
 	if (kit.begin() != 0) {
 		Serial.println("Erro na inicialização :(");
@@ -21,17 +21,17 @@ void setup() {
 }
 
 void loop() {
-	
+
 	// Recebe os comandos pelo aplicativo
 	kit.appCommand();
-	
+
 	// Se iniciar o modo autonomo pelo app,
-	// passa a se comportar como seguidor de liha 
+	// passa a se comportar como seguidor de liha
 	if (kit.seguidor())
 		seguirLinha();
-	
+
 	// Se receber informacao do joystick,
-	// manda os motores de moverem 
+	// manda os motores de moverem
 	if (kit.joystick() > 0)
 		mover();
 
@@ -43,7 +43,7 @@ void seguirLinha() {
 }
 
 void mover() {
-	
+
 	// Obtem as informacoes enviadas pelo app
 	int direcao = kit.joystick(DIRECAO);
 	int velocidade = kit.joystick(VELOCIDADE);
@@ -60,19 +60,19 @@ void mover() {
 	// De acordo com a posicao do joystick,
 	// configura velocidades diferentes para os motores
 	if (direcao == 1)      // Frente
-		kit.setSpeed(velocidade, velocidade);
+		kit.Motores(velocidade, velocidade);
 	else if (direcao == 2) // Frente Direita
-		kit.setSpeed(velocidade, velocidade/3);
+		kit.Motores(velocidade, velocidade/3);
 	else if (direcao == 3) // Direita
-		kit.setSpeed(velocidade, -velocidade);
+		kit.Motores(velocidade, -velocidade);
 	else if (direcao == 4) // Tras Direita
-		kit.setSpeed(-velocidade, -velocidade/3);
+		kit.Motores(-velocidade, -velocidade/3);
 	else if (direcao == 5) // Tras
-		kit.setSpeed(-velocidade, -velocidade);
+		kit.Motores(-velocidade, -velocidade);
 	else if (direcao == 6) // Tras Esquerda
-		kit.setSpeed(-velocidade/3, -velocidade);
+		kit.Motores(-velocidade/3, -velocidade);
 	else if (direcao == 7) // Esquerda
-		kit.setSpeed(-velocidade, velocidade);
+		kit.Motores(-velocidade, velocidade);
 	else if (direcao == 8) // Frente Esquerda
-		kit.setSpeed(velocidade/3, velocidade);
+		kit.Motores(velocidade/3, velocidade);
 }

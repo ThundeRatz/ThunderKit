@@ -12,12 +12,23 @@ ThunderKit	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #############################################
 
-addSensor	KEYWORD2
-setThreshold	KEYWORD2
-getColor	KEYWORD2
-getReading	KEYWORD2
-setSpeed	KEYWORD2
-stopSpeed	KEYWORD2
-ligar_led	KEYWORD2
-desligar_led	KEYWORD2
-intens_led	KEYWORD2
+appComamnd			KEYWORD2
+
+joystick			KEYWORD2
+seguidor			KEYWORD2
+enviarSensores		KEYWORD2
+
+ledRGB				KEYWORD2
+led					KEYWORD2
+ledArcoIris			KEYWORD2
+
+setThreshold		KEYWORD2
+getColor			KEYWORD2
+lerSensor			KEYWORD2
+
+ativarMotores		KEYWORD2
+setSpeed			KEYWORD2
+desativarMotores	KEYWORD2
+
+recv_msg			KEYWORD2
+send_msg			KEYWORD2

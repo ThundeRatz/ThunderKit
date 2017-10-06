@@ -7,7 +7,7 @@
 // Declara o kit, necessario passar o numero
 // para nomear o dispositivo Bluetooth
 
-ThunderKit kit(1);
+ThunderKit kit(4);
 
 void setup() {
 
@@ -16,6 +16,11 @@ void setup() {
 		Serial.println("Erro na inicialização :(");
 		while(1);
 	}
+
+	kit.ledFade();
+
+	kit.ledVerde(100);
+	kit.ledAzul(100);
 }
 
 void loop() {
@@ -29,9 +34,12 @@ void loop() {
 		seguirLinha();
 
 	// Se receber informacao do joystick,
-	// manda os motores de moverem
-	if (kit.joystick() > 0)
+	// manda os motores se moverem
+	else if (kit.joystick() > 0)
 		mover();
+
+	else
+		kit.motores(0, 0);
 
 	delay(10);
 }

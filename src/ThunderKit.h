@@ -15,9 +15,9 @@
 
 // LEDs
 #define LED    13
-#define LEDR   SCL
-#define LEDG   5
-#define LEDB   6
+#define LEDR   6
+#define LEDG   SCL
+#define LEDB   5
 
 #define DIRECAO 0
 #define VELOCIDADE 1
@@ -38,7 +38,7 @@ class ThunderKit {
 		// LEDs
 		void ledVerde(int intensidade);
 		void ledAzul(int intensidade);
-		void ledArcoIris();
+		void ledFade();
 
 		// Sensores linha
 		void definirLimiar(int posicao, int limiar);

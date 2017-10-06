@@ -229,21 +229,31 @@ void ThunderKit::motores(int vel_esq, int vel_dir) {
 void ThunderKit::ledVerde(int intensidade) {
 	intensidade = map(constrain(intensidade, 0, 100), 0, 100, 0, 255);
 	analogWrite(LEDG, 255 - intensidade);
-	analogWrite(LEDR, 0);  // Pino de alimentacao do LED precisa estar ligado
+	analogWrite(LEDR, 255);  // Pino de alimentacao do LED precisa estar ligado
 }
 
 // Acende o LED azul na intensidade especificada (entre 0 e 100)
 void ThunderKit::ledAzul(int intensidade) {
 	intensidade = map(constrain(intensidade, 0, 100), 0, 100, 0, 255);
 	analogWrite(LEDB, 255 - intensidade);
-	analogWrite(LEDR, 0);  // Pino de alimentacao do LED precisa estar ligado
+	analogWrite(LEDR, 255);  // Pino de alimentacao do LED precisa estar ligado
 }
 
-// Muda as intensidades dos LEDs verde e azul aleatoriamente por 5 segundos
-void ThunderKit::ledArcoIris() {
-	for (uint16_t i = 0; i < 500; i++) {
-		ledVerde(random(100));
-		ledAzul(random(100));
+// Muda as intensidades dos LEDs verde e azul gradualmente e volta
+void ThunderKit::ledFade() {
+	ledVerde(0);
+	ledAzul(0);
+
+	for (int i = -100; i <= 100; i++) {
+		ledVerde(100 - abs(i));
+		delay(10);
+	}
+
+	ledVerde(0);
+	delay(100);
+
+	for (int i = -100; i <= 100; i++) {
+		ledAzul(100 - abs(i));
 		delay(10);
 	}
 }

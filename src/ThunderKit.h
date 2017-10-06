@@ -42,7 +42,7 @@ class ThunderKit {
 
 		// Sensores linha
 		void definirLimiar(int posicao, int limiar);
-		int branco(int posicao);
+		boolean branco(int posicao);
 		int lerSensor(int posicao);
 
 		// Motores

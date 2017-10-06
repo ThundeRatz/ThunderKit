@@ -3,12 +3,14 @@
 
 static const int __sensors[] = { A1, A2, A3, A4, A5 };
 
+// Forneca um numero para o construtor para sua identificacao bluetooth
 ThunderKit::ThunderKit(int kit_number) {
 	sprintf(at_name, "AT+NAMBThunderKit%d", kit_number);
 	seguidor_on = false;
 	joystick_pos = 0;
 }
 
+// Faz a configuracoes iniciais necessarias
 int ThunderKit::begin() {
 	Serial.begin(9600);
 	Serial.println("ThunderKit iniciado!");
@@ -84,6 +86,7 @@ int ThunderKit::begin() {
 	return 0;
 }
 
+// Recebe os comandos pelo aplicativo
 int ThunderKit::appCommand() {
 	if (!Serial1.available())
 		return -2;
@@ -102,21 +105,24 @@ int ThunderKit::appCommand() {
 	return 0;
 }
 
+// Retorna a posicao do joystick (de 0 a 83)
 int ThunderKit::joystick() {
 	return joystick_pos;
 }
 
-int ThunderKit::joystick(int parte) {
-	if (parte == DIRECAO)
+/* Se o tipo for DIRECAO, retorna a direcao (0 a 8) do joystick.
+   Se o tipo for VELOCIDADE, retorna a velocidade (0, 1, 2 ou 3) do joystick */
+int ThunderKit::joystick(int tipo) {
+	if (tipo == DIRECAO)
 		return joystick_pos/10;
 
-	if (parte == VELOCIDADE)
+	if (tipo == VELOCIDADE)
 		return joystick_pos%10;
 
 	return 0;
 }
 
-
+// Retorna verdadeiro se estiver no modo seguidor de linha
 boolean ThunderKit::seguidor() {
 	return seguidor_on;
 }
@@ -162,7 +168,7 @@ int ThunderKit::send_msg(const String& msg) {
 }
 
 /*
-	Recebe: Numero do sensor| limiar a ser designado
+	Recebe: Numero do sensor e limiar a ser designado
 */
 void ThunderKit::definirLimiar(int posicao, int limiar) {
 	sensors[posicao].limiar = limiar;
@@ -170,16 +176,16 @@ void ThunderKit::definirLimiar(int posicao, int limiar) {
 
 /*
 	Recebe: Numero do sensor
-	Retorna: 0 - caso abaixo do limiar (preto) | 1 - caso acima do limiar (branco) | -1 - caso num_sensor invalido
+	Retorna: Verdadeiro se a leitura do sensor for branca, falso se for preta
 */
-int ThunderKit::branco(int posicao) {
-	uint16_t reading = analogRead(sensors[posicao].pino);
+boolean ThunderKit::branco(int posicao) {
+	uint16_t reading = lerSensor(posicao);
 	return (reading >= sensors[posicao].limiar);
 }
 
 /*
 	Recebe: Numero do sensor
-	Retorna: Leitura analogica do pino
+	Retorna: Leitura analogica do pino (de 0 a 1023)
 */
 int ThunderKit::lerSensor(int posicao) {
 	if (posicao > 5 || posicao < 0)
@@ -192,11 +198,8 @@ int ThunderKit::lerSensor(int posicao) {
 }
 
 /*
-	Recebe: vel_esq (-100 -> 100) | vel_dir (-100 -> 100)
-	vel_esq	-> Velocidade do motor esquerdo
-	vel_dir	-> Qual o sentido de rotacao
-
-	De acordo com a pg 9 do datasheet http://www.ti.com/lit/ds/symlink/drv8833.pdf
+	Recebe: Velocidades dos motores direito e esquerdo (ambos de -100 a 100)
+	Escolhe a velocidade dos motores.
  */
 void ThunderKit::motores(int vel_esq, int vel_dir) {
 	vel_esq = constrain(vel_esq, -100, 100);

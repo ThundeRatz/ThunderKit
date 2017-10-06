@@ -4,7 +4,8 @@
 static const int __sensors[] = { A1, A2, A3, A4, A5 };
 
 // Forneca um numero para o construtor para sua identificacao bluetooth
-ThunderKit::ThunderKit(int kit_number) {
+ThunderKit::ThunderKit(int kit_number, int _kind = 0) {
+	kind = _kind;
 	sprintf(at_name, "AT+NAMBThunderKit%d", kit_number);
 	seguidor_on = false;
 	joystick_pos = 0;
@@ -202,26 +203,48 @@ int ThunderKit::lerSensor(int posicao) {
 	Escolhe a velocidade dos motores.
  */
 void ThunderKit::motores(int vel_esq, int vel_dir) {
+	
 	vel_esq = constrain(vel_esq, -100, 100);
 	vel_dir = constrain(vel_dir, -100, 100);
 
 	vel_esq = map(vel_esq, -100, 100, -255, 255);
 	vel_dir = map(vel_dir, -100, 100, -255, 255);
 
-	if (vel_esq > 0) {
-		analogWrite(AIN1, vel_esq);
-		analogWrite(AIN2, 0);
-	} else {
-		analogWrite(AIN1, 0);
-		analogWrite(AIN2, abs(vel_esq));
-	}
+	if(kind == 0){		
+		if (vel_esq > 0) {
+			analogWrite(AIN1, vel_esq);
+			analogWrite(AIN2, 0);
+		} else {
+			analogWrite(AIN1, 0);
+			analogWrite(AIN2, abs(vel_esq));
+		}
 
-	if (vel_dir > 0) {
-		analogWrite(BIN2, vel_dir);
-		analogWrite(BIN1, 0);
-	} else {
-		analogWrite(BIN2, 0);
+		if (vel_dir > 0) {
+			analogWrite(BIN2, vel_dir);
+			analogWrite(BIN1, 0);
+		} else {
+			analogWrite(BIN2, 0);
+			analogWrite(BIN1, abs(vel_dir));
+		}
+	}else if(kind == 1){
+		
+		analogWrite(AIN1, abs(vel_esq));
+		if (vel_esq > 0) {
+			digitalWrite(AIN2, HIGH);
+			digitalWrite(AIN3, LOW);
+		} else {
+			digitalWrite(AIN2, LOW);
+			digitalWrite(AIN3, HIGH);
+		}
+
 		analogWrite(BIN1, abs(vel_dir));
+		if (vel_dir > 0) {
+			digitalWrite(BIN2, HIGH);
+			digitalWrite(BIN3, LOW);
+		} else {
+			digitalWrite(BIN2, LOW);
+			digitalWrite(BIN3, HIGH);
+		}
 	}
 }
 

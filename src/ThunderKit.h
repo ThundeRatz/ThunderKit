@@ -10,8 +10,10 @@
 // Motors
 #define AIN1   13
 #define AIN2   10
+#define AIN3   0
 #define BIN1   11
 #define BIN2   9
+#define BIN3   0
 
 // LEDs
 #define LED    13
@@ -24,7 +26,7 @@
 
 class ThunderKit {
 	public:
-		ThunderKit(int kit_number);
+		ThunderKit(int kit_number, int _kind);
 
 		int begin();
 
@@ -61,8 +63,8 @@ class ThunderKit {
 
 		uint8_t recv_packet[20];
 
-		int kind;		
-		
+		int kind;
+
 		int recv_msg(int timeout);
 		int send_msg(const String& msg);
 

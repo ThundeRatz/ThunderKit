@@ -6,11 +6,11 @@
 
 // Declara o kit, necessario passar o numero
 // para nomear o dispositivo Bluetooth
- 
-ThunderKit kit(1);
+
+ThunderKit kit(1, 0);
 
 void setup() {
-	
+
 	// Inicia a biblioteca do kit, aborta a execucao se falhar
 	if (kit.begin() != 0) {
 		Serial.println("Erro na inicialização :(");
@@ -19,11 +19,11 @@ void setup() {
 }
 
 void loop() {
-	
+
 	//Liga e desliga o LED verde
 	kit.ledVerde(100);
 	delay(1000);
-	
+
 	kit.ledVerde(0);
 	delay(1000);
 

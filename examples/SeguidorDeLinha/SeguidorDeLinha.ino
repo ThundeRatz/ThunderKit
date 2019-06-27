@@ -3,7 +3,7 @@
 #define BLACK 0
 #define WHITE 1
 
-ThunderKit kit(1);
+ThunderKit kit(1, 0);
 
 void setup() {
 	if (kit.begin() != 0) {

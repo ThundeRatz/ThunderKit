@@ -4,7 +4,7 @@
 static const int __sensors[] = { A1, A2, A3, A4, A5 };
 
 // Forneca um numero para o construtor para sua identificacao bluetooth
-ThunderKit::ThunderKit(int kit_number, int _kind = 0) {
+ThunderKit::ThunderKit(int kit_number, int _kind) {
 	kind = _kind;
 	sprintf(at_name, "AT+NAMBThunderKit%d", kit_number);
 	seguidor_on = false;
@@ -203,14 +203,14 @@ int ThunderKit::lerSensor(int posicao) {
 	Escolhe a velocidade dos motores.
  */
 void ThunderKit::motores(int vel_esq, int vel_dir) {
-	
+
 	vel_esq = constrain(vel_esq, -100, 100);
 	vel_dir = constrain(vel_dir, -100, 100);
 
 	vel_esq = map(vel_esq, -100, 100, -255, 255);
 	vel_dir = map(vel_dir, -100, 100, -255, 255);
 
-	if(kind == 0){		
+	if(kind == 0){
 		if (vel_esq > 0) {
 			analogWrite(AIN1, vel_esq);
 			analogWrite(AIN2, 0);
@@ -227,7 +227,7 @@ void ThunderKit::motores(int vel_esq, int vel_dir) {
 			analogWrite(BIN1, abs(vel_dir));
 		}
 	}else if(kind == 1){
-		
+
 		analogWrite(AIN1, abs(vel_esq));
 		if (vel_esq > 0) {
 			digitalWrite(AIN2, HIGH);
